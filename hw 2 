@@ -1,0 +1,29 @@
+import pandas as pd
+import numpy as np
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+df = yf.download("AAPL", start="2016-08-01", end="2023-08-01")
+
+# Calculate daily returns and annualized volatility
+df['Returns'] = df['Close'].pct_change()
+df['Volatility'] = df['Returns'].rolling(window=252).std() * np.sqrt(252)
+
+# Plot the S&P 500 prices
+plt.figure(figsize=(14, 7))
+plt.subplot(2, 1, 1)
+plt.plot(df.index, df['Close'], label='Apple Prices', color='blue')
+plt.title('Apple Prices')
+plt.ylabel('Price')
+plt.legend()
+
+# Plot the annualized volatility
+plt.subplot(2, 1, 2)
+plt.plot(df.index, df['Volatility'], label='Annualized Volatility', color='red')
+plt.title('Apple Annualized Volatility')
+plt.ylabel('Annualized Volatility')
+plt.xlabel('Year')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
